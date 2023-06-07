@@ -1,0 +1,17 @@
+---
+- name: SSH keys to new Ubuntu 22.04 server
+  hosts: all
+  become: true
+  vars:
+    ssh_keys:
+      - "~/.ssh/ansible_external.pub"
+#      - "~/.ssh/yubikey1.pub"
+#     - "~/.ssh/yubikey2.pub"
+#     - "~/.ssh/ansible.pub"
+  tasks:
+  - name: ADD ssh pub keys
+    ansible.posix.authorized_key:
+      user: tony
+      state: absent
+      key: "{{ lookup('file', item) }}"
+    loop: "{{ ssh_keys }}"

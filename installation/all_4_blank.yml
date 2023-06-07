@@ -1,0 +1,79 @@
+---
+- name: Configure Ubuntu 22.04 server
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt package list
+      apt:
+        update_cache: yes
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+    - name: Add port 22 to UFW
+      ufw:
+        rule: allow
+        port: 22
+    - name: Enable UFW
+      ufw:
+        state: enabled
+    - name: Install qemu-guest-agent
+      apt:
+        name: qemu-guest-agent
+        state: present
+    - name: Edit SSH config
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+        state: present
+    - name: Restart SSH service
+      service:
+        name: ssh
+        state: restarted
+
+#   - name: Disable SSH connection for root
+    - name: Backup original SSH configuration file
+      command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+      register: ssh_backup
+
+    - name: Disable SSH connection for root user
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: 'PermitRootLogin no'
+      when: ssh_backup.changed
+
+    - name: Restart SSH service
+      service:
+        name: ssh
+        state: restarted
+      when: ssh_backup.changed
+
+    - name: Install tzdata package
+      apt:
+        name: tzdata
+        state: present
+    - name: Ensure NTP is enabled
+      command: timedatectl set-ntp true
+    - name: Ensure NTP is enabled
+      command: timedatectl set-ntp true
+    - name: Set timezone to Europe/Bratislava
+      shell: timedatectl set-timezone Europe/Bratislava
+
+- name: SSH keys to new Ubuntu 22.04 server
+  hosts: new_servers
+  vars:
+    ssh_keys:
+      - "~/.ssh/ansible_external.pub"
+      - "~/.ssh/yubikey1.pub"
+      - "~/.ssh/yubikey2.pub"
+      - "~/.ssh/ansible.pub"
+      - "~/.ssh/meshcentral.pub"
+  tasks:
+  - name: ADD ssh pub keys
+    ansible.posix.authorized_key:
+      user: tony
+      state: present
+      key: "{{ lookup('file', item) }}"
+    loop: "{{ ssh_keys }}"
