@@ -1,6 +1,6 @@
 ---
 
-- hosts: homeservers
+- hosts: all
   become: true
   tasks:
 
