@@ -31,7 +31,7 @@
         host: smtp.wy.sk
         port: 465
         username: watchtower@no-wire.sk
-        password: Watchtower2021
+        password: XXXXX
         to: vawaver@gmail.com
         subject: "Alert: Server requires restart"
         body: Please restart the server as updates have been installed.
