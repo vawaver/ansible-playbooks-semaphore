@@ -1,7 +1,7 @@
 ---
+
 - name: Server Updates and Restart Notification
-  hosts: all
-# serial: 1
+  hosts: server
   gather_facts: true
 
   tasks:
@@ -17,14 +17,14 @@
       register: needs_restart
       changed_when: false
       ignore_errors: true
-      when: apt_update|changed
+      when: apt_update.changed
 
     - name: Install updates
       apt:
         upgrade: dist
         update_cache: yes
       register: apt_upgrade
-      when: apt_update|changed
+      when: apt_update.changed
 
     - name: Send restart notification
       mail:
@@ -36,3 +36,4 @@
         subject: "Alert: Server requires restart"
         body: Please restart the server as updates have been installed.
       when: needs_restart.stdout != "0" and apt_upgrade|changed
+
