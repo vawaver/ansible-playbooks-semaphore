@@ -18,5 +18,8 @@
 
   - name: Reboot if required
     reboot:
-      timeout: 120
-    when: reboot_required_file.stat.exists == true
+        when: reboot_required_file.stat.exists == true
+
+  - name: Reboot a slow machine that might have lots of updates to apply
+    ansible.builtin.reboot:
+      reboot_timeout: 3600      
