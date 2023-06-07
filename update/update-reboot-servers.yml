@@ -18,4 +18,5 @@
 
   - name: Reboot if required
     reboot:
+      timeout: 120
     when: reboot_required_file.stat.exists == true

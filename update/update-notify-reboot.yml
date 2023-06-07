@@ -1,7 +1,7 @@
 ---
 - name: Server Updates and Restart Notification
   hosts: all
-  #serial: 1
+# serial: 1
   gather_facts: true
 
   tasks:
@@ -33,6 +33,6 @@
         username: watchtower@no-wire.sk
         password: Watchtower2021
         to: vawaver@gmail.com
-        subject: Alert: Server requires restart
+        subject: "Alert: Server requires restart"
         body: Please restart the server as updates have been installed.
       when: needs_restart.stdout != "0" and apt_upgrade|changed
