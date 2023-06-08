@@ -1,7 +1,7 @@
 ---
 - name: Upgrade Packages and Notify
   hosts: all
-  gather_facts: true
+#  gather_facts: true
   become: true
 
   tasks:
