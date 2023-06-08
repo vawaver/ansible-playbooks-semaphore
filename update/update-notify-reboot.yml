@@ -28,7 +28,7 @@
         password: "{{ smtp_password }}"
         to: John Smith <john.smith@example.com>
         subject: Ansible-report
-        body: System {{ ansible_hostname }} has been successfully provisioned.
+        body: Server {{ ansible_hostname }} vyzaduje restart systému .
       delegate_to: localhost
       when: reboot_required.stat.exists
       
