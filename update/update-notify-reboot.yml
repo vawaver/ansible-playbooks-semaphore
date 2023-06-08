@@ -26,7 +26,7 @@
         port: 465
         username: "{{ smtp_username }}"
         password: "{{ smtp_password }}"
-        to: John Smith <john.smith@example.com>
+        to: Tony Krajcik <tony@linuxdoma.sk>
         subject: Ansible-report
         body: Server {{ ansible_hostname }} vyzaduje restart systému .
       delegate_to: localhost
